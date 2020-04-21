@@ -1,3 +1,42 @@
+
+# Created by https://www.gitignore.io/api/c++,cmake
+# Edit at https://www.gitignore.io/?templates=c++,cmake
+
+### C++ ###
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+### CMake ###
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles
@@ -9,3 +48,19 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 _deps
+
+### CMake Patch ###
+# External projects
+*-prefix/
+
+
+#build folder
+build 
+
+#tests sur fichiers
+temp
+
+#this is a lib
+src
+
+# End of https://www.gitignore.io/api/c++,cmake
