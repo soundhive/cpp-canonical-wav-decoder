@@ -1,54 +1,44 @@
+#include <chunk.hpp>
+#include <exception>
+#include <string>
 #include <fstream>
 #include <iostream>
-#include <exception>
+#include <experimental/filesystem>
+
+struct audio_data {
+
+};
+
+class is_not_file_exception : public std::exception
+{
+    virtual const char *what() const throw()
+    {
+        return "The provided path does not lead to a file.";
+    }
+};
+
+
 
 
 
 class wav_file {
     public:
 
-    #define CHUNK_ID_SIZE  4;
+    wav_file(const std::string &path_to_file);
+    wav_file(const char* file_buffer);
 
-    wav_file(std::string path_to_file);
     bool is_valid();
 
-    int channels();
-    int sample_rate();
-    int sample_size();
-    int audio_data_length();
-    char* audio_data();
-    int byte_rate();
-
-
+    char* get_audio_data();
     
-    int open();
-    int close();
+    int decode(char *buffer);
     
 
     private:
-    wav_file();
+
     std::string path;
-    char* buffer;
-    bool is_valid;
 
-    char* chunk_id;
-    char* format;
-    int chunk_size;
+    main_chunk *m_chunk;
 
-    char* subchunk_info_id;
-    int subchunk_info_size;
-    int audio_format;
-    int channels;
-    int sample_rate;
-    int byte_rate;
-    int whole_sample_size;
-    int sample_size_bits;
-
-    char* subchunk_data_ID;
-    int subchunk_data_size;
-    char* audio_data;
-
-
-
-    ~wav_file();
 };
+
