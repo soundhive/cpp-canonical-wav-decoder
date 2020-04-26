@@ -2,7 +2,7 @@
 
 int char_array_to_number(const unsigned char *start, const unsigned char *end, const bool &big_endian /* = false */)
 {
-    uint32_t ret = 0;
+    int ret = 0;
 
     while (end >= start)
     {
@@ -15,7 +15,7 @@ int char_array_to_number(const unsigned char *start, const unsigned char *end, c
         }
         
     }
-    return *reinterpret_cast<int*>(&ret);
+    return ret;
 }
 
 
