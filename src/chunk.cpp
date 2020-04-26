@@ -16,14 +16,91 @@ chunk::chunk(char *buffer)
                                               &this->m_buffer[CHUNK_SIZE_END]);
 }
 
-std::string chunk::chunk_id()
+chunk::~chunk()
 {
-    return this->m_chunk_id;
+    //delete this->m_buffer;
 }
 
-size_t chunk::chunk_size()
+audio_chunk::audio_chunk(char *buffer) : chunk(buffer)
 {
+    this->m_audio_data = &buffer[AUDIO_DATA_START];
+}
+
+bool audio_chunk::is_valid()
+{
+    return this->m_chunk_id == "data";
+}
+
+char *audio_chunk::audio_data(){
+    return this->m_buffer; //TODO: add allocation copy instead to prevent loss of the buffer ?
+}
+
+size_t audio_chunk::audio_data_length (){
     return this->m_chunk_size;
+}
+
+info_chunk::info_chunk(char *buffer) : chunk(buffer)
+{
+    int format_identifier = char_array_to_number(&this->m_buffer[AUDIOFORMAT_START],
+                                                 &this->m_buffer[AUDIOFORMAT_END]);
+    if (format_identifier == 1)
+    {
+        this->m_audio_format = "PCM";
+    }
+    else
+    {
+        this->m_audio_format = "unknown";
+    }
+
+    this->m_nb_channels = char_array_to_number(&this->m_buffer[NUMCHANNELS_START],
+                                               &this->m_buffer[NUMCHANNELS_END]);
+
+    this->m_sample_rate = char_array_to_number(&this->m_buffer[SAMPLERATE_START],
+                                               &this->m_buffer[SAMPLERATE_START]);
+
+    this->m_byte_rate = char_array_to_number(&this->m_buffer[BYTERATE_START],
+                                             &this->m_buffer[BYTERATE_START]);
+
+    this->m_block_align = char_array_to_number(&this->m_buffer[BLOCKALIGN_START],
+                                               &this->m_buffer[BLOCKALIGN_END]);
+
+    this->m_sample_size_bits = char_array_to_number(&this->m_buffer[BITSPERSAMPLE_START],
+                                                    &this->m_buffer[BITSPERSAMPLE_END]);
+}
+
+bool info_chunk::is_valid()
+{
+    return this->m_buffer && this->m_chunk_id == "fmt ";
+}
+
+int info_chunk::nb_channels()
+{
+    return this->m_nb_channels;
+}
+
+int info_chunk::sample_rate()
+{
+    return this->m_sample_rate;
+}
+
+int info_chunk::sample_size_bits()
+{
+    return this->m_sample_size_bits;
+}
+
+int info_chunk::byte_rate()
+{
+    return this->m_byte_rate;
+}
+
+int info_chunk::block_align()
+{
+    return this->m_block_align;
+}
+
+std::string *info_chunk::audio_format()
+{
+    return &this->m_audio_format;
 }
 
 main_chunk::main_chunk(char *main_header_buffer,
@@ -48,43 +125,17 @@ bool main_chunk::is_valid()
            (this->m_chunk_id == "RIFF");
 }
 
-info_chunk::info_chunk(char *buffer) : chunk(buffer)
+audio_chunk *main_chunk::audio()
 {
-    int format_identifier = char_array_to_number(&this->m_buffer[AUDIOFORMAT_START],
-                                                &this->m_buffer[AUDIOFORMAT_END]);
-    if (format_identifier == 1) {
-        this->m_format = "PCM";
-    } else {
-        this->m_format = "unknown";
-    }
-
-    this->m_nb_channels = char_array_to_number(&this->m_buffer[NUMCHANNELS_START],
-                                               &this->m_buffer[NUMCHANNELS_END]);
-
-    this->m_sample_rate = char_array_to_number(&this->m_buffer[SAMPLERATE_START],
-                                               &this->m_buffer[SAMPLERATE_START]);
-
-    this->m_byte_rate = char_array_to_number(&this->m_buffer[BYTERATE_START],
-                                             &this->m_buffer[BYTERATE_START]);
-
-    this->m_block_align = char_array_to_number(&this->m_buffer[BLOCKALIGN_START],
-                                               &this->m_buffer[BLOCKALIGN_END]);
-
-    this->m_sample_size_bits = char_array_to_number(&this->m_buffer[BITSPERSAMPLE_START],
-                                                    &this->m_buffer[BITSPERSAMPLE_END]);
+    return this->m_audio;
 }
 
-bool info_chunk::is_valid()
+info_chunk *main_chunk::infos()
 {
-    return this->m_buffer  && this->m_chunk_id == "fmt ";
+    return this->m_infos;
 }
 
-audio_chunk::audio_chunk(char *buffer) : chunk(buffer)
+std::string *main_chunk::format()
 {
-    this->m_audio_data = &buffer[AUDIO_DATA_START];
-}
-
-bool audio_chunk::is_valid()
-{
-    return this->m_chunk_id == "data";
+    return &this->m_format;
 }

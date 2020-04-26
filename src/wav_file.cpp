@@ -37,3 +37,17 @@ bool wav_file::is_valid()
 {
     return (this->m_chunk && this->m_chunk->is_valid());
 }
+
+audio_data *wav_file::get_audio_data(){
+    audio_data *data = new audio_data; 
+    data->audio_format = *this->m_chunk->infos()->audio_format();
+    data->nb_channels = this->m_chunk->infos()->nb_channels();
+    data->byte_rate = this->m_chunk->infos()->byte_rate();
+    data->sample_rate = this->m_chunk->infos()->sample_rate();
+    data->block_align = this->m_chunk->infos()->block_align();
+    data->bits_per_sample = this->m_chunk->infos()->sample_size_bits();
+    data->buffer_length = this->m_chunk->audio()->audio_data_length();
+    data->audio_buffer = this->m_chunk->audio()->audio_data();
+    
+
+}

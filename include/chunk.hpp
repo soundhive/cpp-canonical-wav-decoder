@@ -60,20 +60,20 @@ class chunk
 {
 protected:
     chunk(char *buffer);
+
     char *m_buffer;
     std::string m_chunk_id;
     size_t m_chunk_size;
-    std::string chunk_id();
-    size_t chunk_size();
+    ~chunk();
 };
 
 class audio_chunk : chunk
 {
 public:
     audio_chunk(char *buffer);
-    int audio_data_length();
     bool is_valid();
     char *audio_data();
+    size_t audio_data_length();
 
 private:
     char *m_audio_data;
@@ -83,15 +83,16 @@ class info_chunk : chunk
 {
 public:
     info_chunk(char *buffer);
+    bool is_valid();
     int nb_channels();
     int sample_rate();
-    int sample_size();
+    int sample_size_bits();
     int byte_rate();
-    bool is_valid();
-    std::string format;
+    int block_align();
+    std::string *audio_format();
 
 private:
-    std::string m_format;
+    std::string m_audio_format;
     int m_nb_channels;
     int m_sample_rate;
     int m_byte_rate;
@@ -109,11 +110,11 @@ public:
     main_chunk(char *main_header_buffer,
                char *info_chunk_buffer,
                char *data_chunk_buffer);
-
-    audio_chunk audio();
-    info_chunk infos();
-    std::string format();
     bool is_valid();
+
+    audio_chunk *audio();
+    info_chunk *infos();
+    std::string *format();
 
 private:
     std::string m_format;

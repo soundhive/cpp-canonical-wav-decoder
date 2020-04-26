@@ -6,7 +6,14 @@
 #include <experimental/filesystem>
 
 struct audio_data {
-
+    std::string audio_format;
+    int nb_channels;
+    int byte_rate;
+    int sample_rate;
+    int block_align;
+    int bits_per_sample;
+    size_t buffer_length;
+    char *audio_buffer;
 };
 
 class is_not_file_exception : public std::exception
@@ -29,7 +36,7 @@ class wav_file {
 
     bool is_valid();
 
-    char* get_audio_data();
+    audio_data *get_audio_data();
     
     int decode(char *buffer);
     
