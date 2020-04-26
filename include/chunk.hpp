@@ -59,9 +59,9 @@ class invalid_buffer_exception : public std::exception
 class chunk
 {
 protected:
-    chunk(char *buffer);
+    chunk(unsigned char *buffer);
 
-    char *m_buffer;
+    unsigned char *m_buffer;
     std::string m_chunk_id;
     size_t m_chunk_size;
     ~chunk();
@@ -70,9 +70,9 @@ protected:
 class audio_chunk : chunk
 {
 public:
-    audio_chunk(char *buffer);
+    audio_chunk(unsigned char *buffer);
     bool is_valid();
-    char *audio_data();
+    unsigned char *audio_data();
     size_t audio_data_length();
 
 private:
@@ -82,7 +82,7 @@ private:
 class info_chunk : chunk
 {
 public:
-    info_chunk(char *buffer);
+    info_chunk(unsigned char *buffer);
     bool is_valid();
     int nb_channels();
     int sample_rate();
@@ -93,11 +93,11 @@ public:
 
 private:
     std::string m_audio_format;
-    int m_nb_channels;
-    int m_sample_rate;
-    int m_byte_rate;
-    int m_block_align;
-    int m_sample_size_bits;
+    int m_nb_channels = 0;
+    int m_sample_rate = 0;
+    int m_byte_rate = 0;
+    int m_block_align = 0;
+    int m_sample_size_bits = 0;
 };
 
 /**
@@ -107,9 +107,9 @@ class main_chunk : chunk
 {
 public:
     //constructor
-    main_chunk(char *main_header_buffer,
-               char *info_chunk_buffer,
-               char *data_chunk_buffer);
+    main_chunk(unsigned char *main_header_buffer,
+               unsigned char *info_chunk_buffer,
+               unsigned char *data_chunk_buffer);
     bool is_valid();
 
     audio_chunk *audio();

@@ -1,8 +1,8 @@
 #include <generic.hpp>
 
-int char_array_to_number(const char *start, const char *end, const bool &big_endian /* = false */)
+int char_array_to_number(const unsigned char *start, const unsigned char *end, const bool &big_endian /* = false */)
 {
-    int ret = 0;
+    uint32_t ret = 0;
 
     while (end >= start)
     {
@@ -15,7 +15,7 @@ int char_array_to_number(const char *start, const char *end, const bool &big_end
         }
         
     }
-    return ret;
+    return *reinterpret_cast<int*>(&ret);
 }
 
 
@@ -23,7 +23,7 @@ int char_array_to_number(const char *start, const char *end, const bool &big_end
 
 
 
-std::string char_array_to_string(const char *start, const char *end, const bool &big_endian /* = true */)
+std::string char_array_to_string(const unsigned char *start, const unsigned char *end)
 {
     if (start == nullptr || end == nullptr)
         return "";

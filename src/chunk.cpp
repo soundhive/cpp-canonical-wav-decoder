@@ -1,6 +1,6 @@
 #include <chunk.hpp>
 
-chunk::chunk(char *buffer)
+chunk::chunk(unsigned char *buffer)
 {
     if (!buffer)
     {
@@ -21,9 +21,9 @@ chunk::~chunk()
     //delete this->m_buffer;
 }
 
-audio_chunk::audio_chunk(char *buffer) : chunk(buffer)
+audio_chunk::audio_chunk(unsigned char *buffer) : chunk(buffer)
 {
-    this->m_audio_data = &buffer[AUDIO_DATA_START];
+    this->m_audio_data = reinterpret_cast<char *>(&buffer[AUDIO_DATA_START]);
 }
 
 bool audio_chunk::is_valid()
@@ -31,7 +31,7 @@ bool audio_chunk::is_valid()
     return this->m_chunk_id == "data";
 }
 
-char *audio_chunk::audio_data(){
+unsigned char *audio_chunk::audio_data(){
     return this->m_buffer; //TODO: add allocation copy instead to prevent loss of the buffer ?
 }
 
@@ -39,7 +39,7 @@ size_t audio_chunk::audio_data_length (){
     return this->m_chunk_size;
 }
 
-info_chunk::info_chunk(char *buffer) : chunk(buffer)
+info_chunk::info_chunk(unsigned char *buffer) : chunk(buffer)
 {
     int format_identifier = char_array_to_number(&this->m_buffer[AUDIOFORMAT_START],
                                                  &this->m_buffer[AUDIOFORMAT_END]);
@@ -56,10 +56,10 @@ info_chunk::info_chunk(char *buffer) : chunk(buffer)
                                                &this->m_buffer[NUMCHANNELS_END]);
 
     this->m_sample_rate = char_array_to_number(&this->m_buffer[SAMPLERATE_START],
-                                               &this->m_buffer[SAMPLERATE_START]);
-
+                                               &this->m_buffer[SAMPLERATE_END]);
+    
     this->m_byte_rate = char_array_to_number(&this->m_buffer[BYTERATE_START],
-                                             &this->m_buffer[BYTERATE_START]);
+                                             &this->m_buffer[BYTERATE_END]);
 
     this->m_block_align = char_array_to_number(&this->m_buffer[BLOCKALIGN_START],
                                                &this->m_buffer[BLOCKALIGN_END]);
@@ -103,9 +103,9 @@ std::string *info_chunk::audio_format()
     return &this->m_audio_format;
 }
 
-main_chunk::main_chunk(char *main_header_buffer,
-                       char *info_chunk_buffer,
-                       char *audio_chunk_buffer) : chunk(main_header_buffer)
+main_chunk::main_chunk(unsigned char *main_header_buffer,
+                       unsigned char *info_chunk_buffer,
+                       unsigned char *audio_chunk_buffer) : chunk(main_header_buffer)
 {
 
     this->m_infos = new info_chunk(info_chunk_buffer);

@@ -12,7 +12,7 @@ wav_file::wav_file(const std::string &path_to_file)
 
     //define size and open stream
     int file_size = fs::file_size(path_to_file);
-    std::ifstream source_file(path_to_file, std::ios::in);
+    std::ifstream source_file(path_to_file, std::ios::binary);
 
     //allcoate main chunk header buffer
     char *main_header_buffer = new char[MAIN_CHUNK_SIZE];
@@ -26,10 +26,9 @@ wav_file::wav_file(const std::string &path_to_file)
     source_file.read(data_chunk_buffer, file_size);
 
     //create the structures
-    this->m_chunk = new main_chunk(main_header_buffer,
-                                   info_chunk_buffer,
-                                   data_chunk_buffer);
-
+    this->m_chunk = new main_chunk(reinterpret_cast<unsigned char*>(main_header_buffer),
+                                   reinterpret_cast<unsigned char*>(info_chunk_buffer),
+                                   reinterpret_cast<unsigned char*>(data_chunk_buffer));
     source_file.close();
 }
 
@@ -47,7 +46,5 @@ audio_data *wav_file::get_audio_data(){
     data->block_align = this->m_chunk->infos()->block_align();
     data->bits_per_sample = this->m_chunk->infos()->sample_size_bits();
     data->buffer_length = this->m_chunk->audio()->audio_data_length();
-    data->audio_buffer = this->m_chunk->audio()->audio_data();
-    
-
+    data->audio_buffer =reinterpret_cast<char*>(this->m_chunk->audio()->audio_data());
 }
