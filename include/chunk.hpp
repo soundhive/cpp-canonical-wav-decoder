@@ -1,8 +1,10 @@
 #include <iostream>
 #include <exception>
-#include <string>
 #include <generic.hpp>
 #include <iomanip>
+
+namespace wav_chunk_decoder
+{
 
 //Generic chunk properties
 #define CHUNK_ID_START 0
@@ -72,7 +74,7 @@ class audio_chunk : chunk
 public:
     audio_chunk(unsigned char *buffer);
     bool is_valid();
-    unsigned char *audio_data();
+    unsigned char *cpy_audio_data();
     size_t audio_data_length();
 
 private:
@@ -84,20 +86,19 @@ class info_chunk : chunk
 public:
     info_chunk(unsigned char *buffer);
     bool is_valid();
-    int nb_channels();
-    int sample_rate();
-    int sample_size_bits();
-    int byte_rate();
-    int block_align();
+    unsigned short nb_channels();
+    unsigned short sample_size_bits();
+    unsigned int sample_rate();
+    unsigned int byte_rate();
+    unsigned int block_align();
     std::string *audio_format();
-
 private:
     std::string m_audio_format;
-    int m_nb_channels = 0;
-    int m_sample_rate = 0;
-    int m_byte_rate = 0;
-    int m_block_align = 0;
-    int m_sample_size_bits = 0;
+    unsigned short m_nb_channels = 0;
+    unsigned short m_sample_size_bits = 0;
+    unsigned int m_sample_rate = 0;
+    unsigned int m_byte_rate = 0;
+    unsigned int m_block_align = 0;
 };
 
 /**
@@ -121,3 +122,5 @@ private:
     audio_chunk *m_audio;
     info_chunk *m_infos;
 };
+
+} // namespace wav_chunk_decoder

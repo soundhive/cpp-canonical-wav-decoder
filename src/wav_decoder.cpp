@@ -1,8 +1,12 @@
-#include <wav_file.hpp>
+#include <wav_decoder.hpp>
 
 namespace fs = std::experimental::filesystem;
 
-wav_file::wav_file(const std::string &path_to_file)
+
+
+namespace wd = wav_decoder;
+
+wd::wav_file::wav_file(const std::string &path_to_file)
 {
     //check for null
     if (!fs::exists(path_to_file) || fs::is_directory(path_to_file))
@@ -26,19 +30,22 @@ wav_file::wav_file(const std::string &path_to_file)
     source_file.read(data_chunk_buffer, file_size);
 
     //create the structures
-    this->m_chunk = new main_chunk(reinterpret_cast<unsigned char*>(main_header_buffer),
-                                   reinterpret_cast<unsigned char*>(info_chunk_buffer),
-                                   reinterpret_cast<unsigned char*>(data_chunk_buffer));
+    this->m_chunk = new wcd::main_chunk(reinterpret_cast<unsigned char *>(main_header_buffer),
+                                        reinterpret_cast<unsigned char *>(info_chunk_buffer),
+                                        reinterpret_cast<unsigned char *>(data_chunk_buffer));
     source_file.close();
 }
 
-bool wav_file::is_valid()
+
+
+bool wd::wav_file::is_valid()
 {
     return (this->m_chunk && this->m_chunk->is_valid());
 }
 
-audio_data *wav_file::get_audio_data(){
-    audio_data *data = new audio_data; 
+wd::audio_data *wd::wav_file::get_audio_data()
+{
+    audio_data *data = new audio_data;
     data->audio_format = *this->m_chunk->infos()->audio_format();
     data->nb_channels = this->m_chunk->infos()->nb_channels();
     data->byte_rate = this->m_chunk->infos()->byte_rate();
@@ -46,5 +53,9 @@ audio_data *wav_file::get_audio_data(){
     data->block_align = this->m_chunk->infos()->block_align();
     data->bits_per_sample = this->m_chunk->infos()->sample_size_bits();
     data->buffer_length = this->m_chunk->audio()->audio_data_length();
-    data->audio_buffer =reinterpret_cast<char*>(this->m_chunk->audio()->audio_data());
+    data->audio_buffer = reinterpret_cast<char *>(this->m_chunk->audio()->cpy_audio_data());
 }
+
+
+
+

@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 cmake_policy(VERSION 3.2)
 
 project(cpp_cannonical_wav_decoder
-    VERSION "0.0.1"
+    VERSION "0.0.2"
     DESCRIPTION "cpp_cannonical_wav_decoder"
 )
 
@@ -24,7 +24,7 @@ set(INCLUDES
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${INCLUDES})
 
-#target_link_libraries(${PROJECT_NAME} minimp3)
+
 
 
 

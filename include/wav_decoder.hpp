@@ -1,11 +1,15 @@
 #include <chunk.hpp>
 #include <exception>
-#include <string>
 #include <fstream>
 #include <iostream>
 #include <experimental/filesystem>
+namespace wcd = wav_chunk_decoder;
 
-struct audio_data {
+namespace wav_decoder
+{
+
+struct audio_data
+{
     std::string audio_format;
     int nb_channels;
     int byte_rate;
@@ -24,28 +28,18 @@ class is_not_file_exception : public std::exception
     }
 };
 
-
-
-
-
-class wav_file {
-    public:
-
+class wav_file
+{
+public:
     wav_file(const std::string &path_to_file);
-    wav_file(const char* file_buffer);
-
     bool is_valid();
-
     audio_data *get_audio_data();
-    
-    int decode(char *buffer);
-    
 
-    private:
-
+private:
     std::string path;
+    wcd::main_chunk *m_chunk;
 
-    main_chunk *m_chunk;
 
 };
 
+} // namespace wav_decoder

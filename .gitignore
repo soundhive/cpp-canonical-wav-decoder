@@ -64,6 +64,7 @@ TEMP
 main.cpp
 
 ### VisualStudioCode ###
+.vscode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json

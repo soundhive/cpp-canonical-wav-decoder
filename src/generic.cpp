@@ -1,32 +1,24 @@
 #include <generic.hpp>
 
-int char_array_to_number(const unsigned char *start, const unsigned char *end, const bool &big_endian /* = false */)
-{
-    int ret = 0;
+namespace gf = generic_funcs;
 
-    while (end >= start)
+std::string gf::bin_to_string(const unsigned char *start,
+                              const unsigned char *end,
+                              const int &endianness)
+{
+    if (endianness == BIG_ENDIAN)
     {
-        if (big_endian){
-            ret = (ret << 8) + *start;
-            start++;
-        } else {
-            ret = (ret << 8) + *end;
-            end--;
-        }
-        
+        end++;
+        return std::string(start, end);
     }
-    return ret;
-}
-
-
-
-
-
-
-std::string char_array_to_string(const unsigned char *start, const unsigned char *end)
-{
-    if (start == nullptr || end == nullptr)
-        return "";
-    end++;
-    return std::string(start, end);
+    else
+    {
+        std::string res = "";
+        while (start <= end)
+        {
+            res += *end;
+            end --;
+        }
+        return res;
+    }
 }

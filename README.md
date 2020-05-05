@@ -11,35 +11,33 @@ Add `CMakeLists.txt` directory to your `CMakeLists.txt`, using
 
 
 ## How to use
-Create a wav_file object using the constructor that takes a string reference, then use ``get_audio_data``. It will return a structure that holds everything you may need to read the PCM stream.
+Create a wav_decoder object using the constructor that takes a string reference, then use ``is_valid()`` to check if the file is readable, and finally ``get_audio_data()``. It will return a structure that holds everything you may need to read the PCM stream. Don't forget to use the correct namespace : `wav_decoder`.
+
 Example of use : 
 ```c++
-#include <iostream>
 #include <wav_file.hpp>
-
 
 int main(int argc, char const *argv[])
 {
-    std::string path = argv[1];
-    wav_file file(path);
-    std::cout << "validity : " << file.is_valid() << std::endl;
-    audio_data *data = file.get_audio_data();
-    std::cout << "audio format : " << data->audio_format << std::endl;
-    std::cout << "nb channels : " << data->nb_channels << std::endl;
-    std::cout << "byte rate : " << data->byte_rate << std::endl;
-    std::cout << "sample rate : " << data->sample_rate << std::endl;
-    std::cout << "block align : " << data->block_align << std::endl;
-    std::cout << "bits per sample " << data->bits_per_sample << std::endl;
-    std::cout << "buffer length : " << data->buffer_length << std::endl;
+    wav_decoder::wav_file file(path);
 
-    std::cout << "writing to pcm file..." << std::endl;
-    std::ofstream out_file("/home/vagahbond/Documents/ESGI/Projet Annuel/cpp_cannonical_wav_decoder/TEMP/raw_out.pcm", std::ios::out);
-    out_file.write(data->audio_buffer, data->buffer_length);
-    std::cout << "file written !" << std::endl;
-    out_file.close();
-    
+    if (file.is_valid())
+    {
+        wav_decoder::audio_data *data = file.get_audio_data();
+        std::cout << "audio format : " << data->audio_format << std::endl;
+        std::cout << "nb channels : " << data->nb_channels << std::endl;
+        std::cout << "byte rate : " << data->byte_rate << std::endl;
+        std::cout << "sample rate : " << data->sample_rate << std::endl;
+        std::cout << "block align : " << data->block_align << std::endl;
+        std::cout << "bits per sample " << data->bits_per_sample << std::endl;
+        std::cout << "buffer length : " << data->buffer_length << std::endl;
+    }
+    else
+    {
+        std::cout << "The input is not a valid WAV file." << std::endl;
+    }
+
     return 0;
-
 }
 ```
 
