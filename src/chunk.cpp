@@ -11,7 +11,7 @@ wcd::chunk::chunk(unsigned char *buffer)
 {
     if (!buffer)
     {
-        throw new invalid_buffer_exception;
+        throw invalid_buffer_exception();
     }
 
     this->m_buffer = buffer;

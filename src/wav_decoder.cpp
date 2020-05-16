@@ -11,7 +11,7 @@ wd::wav_file::wav_file(const std::string &path_to_file)
     //check for null
     if (!fs::exists(path_to_file) || fs::is_directory(path_to_file))
     {
-        throw new is_not_file_exception;
+        throw is_not_file_exception();
     }
 
     //define size and open stream
