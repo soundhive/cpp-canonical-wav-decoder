@@ -7,14 +7,12 @@ namespace wcd = wav_chunk_decoder;
 /**
  * Constructor ssings primary buffer, and parse chunk ID and size
  */
-wcd::chunk::chunk(unsigned char *buffer)
+wcd::chunk::chunk(unsigned char *buffer) : m_buffer(buffer)
 {
     if (!buffer)
     {
         throw invalid_buffer_exception();
     }
-
-    this->m_buffer = buffer;
 
     this->m_chunk_id = gf::bin_to_string(this->m_buffer,
                                          &this->m_buffer[CHUNK_ID_END]);
@@ -31,9 +29,9 @@ wcd::chunk::~chunk()
     delete this->m_buffer;
 }
 
-wcd::audio_chunk::audio_chunk(unsigned char *buffer) : chunk(buffer)
+wcd::audio_chunk::audio_chunk(unsigned char *buffer) : chunk(buffer), m_audio_data( reinterpret_cast<char *>(&buffer[AUDIO_DATA_START]))
 {
-    this->m_audio_data = reinterpret_cast<char *>(&buffer[AUDIO_DATA_START]);
+  
 }
 
 bool wcd::audio_chunk::is_valid()
