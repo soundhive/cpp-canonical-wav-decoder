@@ -8,24 +8,25 @@ namespace wd = wav_decoder;
 
 wd::wav_file::wav_file(const std::string &path_to_file)
 {
-    //check for null
+    //check for null.
     if (!fs::exists(path_to_file) || fs::is_directory(path_to_file))
     {
         throw is_not_file_exception();
     }
 
-    //define size and open stream
+    //define size and open stream.
     int file_size = fs::file_size(path_to_file);
     std::ifstream source_file(path_to_file, std::ios::binary);
 
-    //allcoate main chunk header buffer
+    //allcoate main chunk header buffer.
     char *main_header_buffer = new char[MAIN_CHUNK_SIZE];
     char *info_chunk_buffer = new char[INFO_CHUNK_SIZE];
     char *data_chunk_buffer = new char[file_size];
 
-    //read the file
+    //read the file.
     source_file.read(main_header_buffer, MAIN_CHUNK_SIZE);
     source_file.read(info_chunk_buffer, INFO_CHUNK_SIZE);
+
     //audio data chunk is until end of file.
     source_file.read(data_chunk_buffer, file_size);
 
@@ -37,12 +38,13 @@ wd::wav_file::wav_file(const std::string &path_to_file)
 }
 
 
-
+//Returns false if file is not recognized as cannonical wave.
 bool wd::wav_file::is_valid()
 {
     return (this->m_chunk && this->m_chunk->is_valid());
 }
 
+//Returns the audio data structure filled with informations.
 wd::audio_data *wd::wav_file::get_audio_data()
 {
     audio_data *data = new audio_data;
