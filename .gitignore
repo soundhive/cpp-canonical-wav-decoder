@@ -75,5 +75,7 @@ main.cpp
 # Ignore all local history of files
 .history
 
+### building script
+build.sh
 
 # End of https://www.gitignore.io/api/c++,cmake

@@ -54,8 +54,9 @@ wd::audio_data *wd::wav_file::get_audio_data()
     data->sample_rate = this->m_chunk->infos()->sample_rate();
     data->block_align = this->m_chunk->infos()->block_align();
     data->bits_per_sample = this->m_chunk->infos()->sample_size_bits();
-    data->buffer_length = this->m_chunk->audio()->audio_data_length();
-    data->audio_buffer = reinterpret_cast<char *>(this->m_chunk->audio()->cpy_audio_data());
+    data->buffer_length = this->m_chunk->audio()->audio_data_length(); 
+    unsigned char * buffer = this->m_chunk->audio()->cpy_audio_data();
+    data->audio_buffer = std::make_unique<unsigned char>(*buffer);
 }
 
 

@@ -17,7 +17,7 @@ struct audio_data
     int block_align;
     int bits_per_sample;
     size_t buffer_length;
-    char *audio_buffer;
+    std::unique_ptr<unsigned char> audio_buffer;
 };
 
 class is_not_file_exception : public std::exception
