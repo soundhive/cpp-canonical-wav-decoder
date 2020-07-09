@@ -2,6 +2,7 @@
 #include <exception>
 #include <generic.hpp>
 #include <iomanip>
+#include <memory>
 
 namespace wav_chunk_decoder
 {
@@ -62,6 +63,7 @@ class chunk
 {
 protected:
     chunk(unsigned char *buffer);
+    ~chunk();
 
     unsigned char *m_buffer;
     std::string m_chunk_id;
@@ -73,6 +75,8 @@ class audio_chunk : chunk
 {
 public:
     audio_chunk(unsigned char *buffer);
+    ~audio_chunk();
+
     bool is_valid();
     unsigned char *cpy_audio_data();
     size_t audio_data_length();
@@ -85,15 +89,20 @@ class info_chunk : chunk
 {
 public:
     info_chunk(unsigned char *buffer);
+    ~info_chunk();
+
     bool is_valid();
+
     unsigned short nb_channels();
     unsigned short sample_size_bits();
     unsigned int sample_rate();
     unsigned int byte_rate();
     unsigned int block_align();
     std::string *audio_format();
+
 private:
     std::string m_audio_format;
+
     unsigned short m_nb_channels = 0;
     unsigned short m_sample_size_bits = 0;
     unsigned int m_sample_rate = 0;
@@ -108,9 +117,8 @@ class main_chunk : chunk
 {
 public:
     //constructor
-    main_chunk(unsigned char *main_header_buffer,
-               unsigned char *info_chunk_buffer,
-               unsigned char *data_chunk_buffer);
+    main_chunk(const std::shared_ptr<unsigned char>* file_buffer);
+    ~main_chunk();
     bool is_valid();
 
     audio_chunk *audio();

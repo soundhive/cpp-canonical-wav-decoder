@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include <experimental/filesystem>
+#include <memory>
 namespace wcd = wav_chunk_decoder;
 
 namespace wav_decoder
@@ -32,14 +33,14 @@ class wav_file
 {
 public:
     wav_file(const std::string &path_to_file);
+    ~wav_file();
     bool is_valid();
-    audio_data *get_audio_data();
+    std::unique_ptr<audio_data> get_audio_data();
 
 private:
     std::string path;
+    std::shared_ptr<unsigned char> file_buffer;
     wcd::main_chunk *m_chunk;
-
-
 };
 
 } // namespace wav_decoder

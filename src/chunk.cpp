@@ -9,6 +9,7 @@ namespace wcd = wav_chunk_decoder;
  */
 wcd::chunk::chunk(unsigned char *buffer) : m_buffer(buffer)
 {
+    std::cout << "Chunk constructor" << std::endl;
     if (!buffer)
     {
         throw invalid_buffer_exception();
@@ -26,12 +27,13 @@ wcd::chunk::chunk(unsigned char *buffer) : m_buffer(buffer)
  */
 wcd::chunk::~chunk()
 {
+    std::cout << "Chunk destructor" << std::endl;
     delete this->m_buffer;
 }
 
-wcd::audio_chunk::audio_chunk(unsigned char *buffer) : chunk(buffer), m_audio_data( reinterpret_cast<char *>(&buffer[AUDIO_DATA_START]))
+wcd::audio_chunk::audio_chunk(unsigned char *buffer) : chunk(buffer), m_audio_data(reinterpret_cast<char *>(&buffer[AUDIO_DATA_START]))
 {
-  
+    std::cout << "audio-chunk constructor constructor" << std::endl;
 }
 
 bool wcd::audio_chunk::is_valid()
@@ -81,7 +83,6 @@ wcd::info_chunk::info_chunk(unsigned char *buffer) : chunk(buffer)
                                                           &this->m_buffer[BLOCKALIGN_END]);
 }
 
-
 bool wcd::info_chunk::is_valid()
 {
     return this->m_buffer && this->m_chunk_id == "fmt ";
@@ -102,8 +103,6 @@ unsigned int wcd::info_chunk::sample_rate()
     return this->m_sample_rate;
 }
 
-
-
 unsigned int wcd::info_chunk::byte_rate()
 {
     return this->m_byte_rate;
@@ -119,17 +118,16 @@ std::string *wcd::info_chunk::audio_format()
     return &this->m_audio_format;
 }
 
-wcd::main_chunk::main_chunk(unsigned char *main_header_buffer,
-                       unsigned char *info_chunk_buffer,
-                       unsigned char *audio_chunk_buffer) : chunk(main_header_buffer)
+wcd::main_chunk::main_chunk(const std::shared_ptr<unsigned char> *file_buffer)
+    : chunk(reinterpret_cast<unsigned char *>(file_buffer->get()))
 {
 
-    this->m_infos = new info_chunk(info_chunk_buffer);
+    this->m_infos = new info_chunk(reinterpret_cast<unsigned char*>(file_buffer->get() + MAIN_CHUNK_SIZE));
 
-    this->m_audio = new audio_chunk(audio_chunk_buffer);
+    this->m_audio = new audio_chunk(reinterpret_cast<unsigned char*>(file_buffer->get() + MAIN_CHUNK_SIZE + INFO_CHUNK_SIZE));
 
     this->m_format = gf::bin_to_string(&this->m_buffer[FORMAT_START],
-                                          &this->m_buffer[FORMAT_END]);
+                                       &this->m_buffer[FORMAT_END]);
 }
 
 //States if the current buffer loaded file is a valid Wave file
