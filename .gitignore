@@ -78,4 +78,9 @@ main.cpp
 ### building script
 build.sh
 
+launch.json
+settings.json
+
+old
+
 # End of https://www.gitignore.io/api/c++,cmake

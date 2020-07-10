@@ -1,1 +1,1 @@
-valgrind --leak-check=yes ./build/cpp_cannonical_wav_decoder ./TEMP/test.wav
+valgrind --leak-check=yes --track-origins=yes ./build/cpp_cannonical_wav_decoder ./TEMP/test.wav

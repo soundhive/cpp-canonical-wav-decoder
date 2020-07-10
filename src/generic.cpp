@@ -2,14 +2,7 @@
 #include <memory>
 namespace gf = generic_funcs;
 
-namespace std
-{
-    template <typename T>
-    inline std::shared_ptr<T> make_shared(const size_t &size)
-    {
-        return std::shared_ptr<T>(new T[size], [](T *p) { delete[] p; });
-    }
-} // namespace std
+
 
 std::string gf::bin_to_string(const unsigned char *start,
                               const unsigned char *end,
@@ -20,7 +13,7 @@ std::string gf::bin_to_string(const unsigned char *start,
         end++;
         return std::string(start, end);
     }
-    else
+    else if (endianness == LITTLE_ENDIAN)
     {
         std::string res = "";
         while (start <= end)
@@ -29,5 +22,8 @@ std::string gf::bin_to_string(const unsigned char *start,
             end--;
         }
         return res;
+    }
+    else {
+        throw new std::invalid_argument("Wrong endianess value.");
     }
 }
