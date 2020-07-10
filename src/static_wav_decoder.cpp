@@ -72,33 +72,34 @@ std::shared_ptr<wd::audio_data> wd::parse_file(unsigned char *buffer, size_t buf
     //second subchunk
     std::string     audio_chunk_id      = gf::bin_to_string(buffer + AUDIO_CHUNK_ID_START, buffer + AUDIO_CHUNK_ID_END);
     size_t          audio_chunk_size    = gf::bin_to_number<size_t>(buffer + AUDIO_CHUNK_SIZE_START, buffer + AUDIO_CHUNK_SIZE_END);
+    std::shared_ptr<unsigned char> audio_data = cpy_audio_buffer(buffer, audio_chunk_size);
 
 
+    if (main_chunk_id != "RIFF"     ||
+        main_chunk_format != "WAVE" ||
+        info_chunk_id != "fmt "     ||
+        info_chunk_format != 1      ||
+        audio_chunk_id != "data") {
+            data->is_valid = false;
+        }
+    else {
+        data->is_valid = true;
+
+        // if audio format is 1, then format is PCM.
+        data->audio_format = "PCM";
+
+        data->nb_channels = channels;
+        data->byte_rate = byterate;
+        data->sample_rate = sr;
+        data->block_align = block_align;
+        data->bits_per_sample = bps;
+        data->buffer_length = audio_chunk_size;
+        data->audio_buffer =  cpy_audio_buffer(buffer, audio_chunk_size);
+    }
+
+    
 
 
-
-    std::cout << main_chunk_id << std::endl;
-    std::cout << main_chunk_size << std::endl;
-    std::cout << main_chunk_format << std::endl;
-
-
-    std::cout << info_chunk_id << std::endl;
-    std::cout << info_chunk_size << std::endl;
-    std::cout << info_chunk_format << std::endl;
-    std::cout << channels << std::endl;
-    std::cout << sr << std::endl;
-    std::cout << byterate << std::endl;
-    std::cout << block_align << std::endl;
-    std::cout << bps << std::endl;
-
-    std::cout << audio_chunk_id << std::endl;
-    std::cout << audio_chunk_size << std::endl;
-
-
-    // buffer containing 
-    // data->
-    // data->audio_buffer = cpy_audio_buffer(buffer, buffer_size);
-    // data->buffer_length = (file_size - RAW_DATA_START);
-    // data->audio_format = gf::bin_to_string(buffer + FORMAT_START, buffer + FORMAT_END, LITTLE_ENDIAN);
     return data;
 }
+

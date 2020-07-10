@@ -84,7 +84,5 @@ namespace wav_decoder
 
     std::shared_ptr<unsigned char> cpy_audio_buffer(unsigned char *, const size_t &file_size);
 
-    std::string extract_audio_format(unsigned char *buffer);
-
     std::shared_ptr<audio_data> parse_file(unsigned char *buffer, size_t buffer_size);
 } // namespace wav_decoder
