@@ -77,12 +77,12 @@ namespace wav_decoder
         int block_align;
         int bits_per_sample;
         size_t buffer_length;
-        std::shared_ptr<unsigned char> audio_buffer;
+        std::shared_ptr<char> audio_buffer;
     };
 
     std::shared_ptr<audio_data> decode(const std::string &path_to_file);
 
-    std::shared_ptr<unsigned char> cpy_audio_buffer(unsigned char *, const size_t &file_size);
+    std::shared_ptr<char> cpy_audio_buffer(unsigned char *, const size_t &file_size);
 
     std::shared_ptr<audio_data> parse_file(unsigned char *buffer, size_t buffer_size);
 } // namespace wav_decoder
