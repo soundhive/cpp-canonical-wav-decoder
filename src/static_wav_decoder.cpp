@@ -72,7 +72,6 @@ std::shared_ptr<wd::audio_data> wd::parse_file(unsigned char *buffer, size_t buf
     //second subchunk
     std::string     audio_chunk_id      = gf::bin_to_string(buffer + AUDIO_CHUNK_ID_START, buffer + AUDIO_CHUNK_ID_END);
     size_t          audio_chunk_size    = gf::bin_to_number<size_t>(buffer + AUDIO_CHUNK_SIZE_START, buffer + AUDIO_CHUNK_SIZE_END);
-    std::shared_ptr<char> audio_data = cpy_audio_buffer(buffer, audio_chunk_size);
 
 
     if (main_chunk_id != "RIFF"     ||
