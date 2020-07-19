@@ -4,15 +4,27 @@ Simple, minimalistic lib to decode cannonical Wav files.
 Cannonical here means basic wav files  with a main "RIFF" chunk containing a format sub chunk and a data subchink as described in [this website](https://web.archive.org/web/20190902171853/soundfile.sapp.org/doc/WaveFormat/). Those files are supposed to contain raw audio data in the PCM format, thus having no compression whatsoever.
 
 ## How to include in a cmake project
-Add `CMakeLists.txt` directory to your `CMakeLists.txt`, using 
+Add this project as submodule in some reserved directory :
+```bash
+mkdir libs
+cd libs
+git submodule add git@github.com:soundhive/cpp-canonical-wav-decoder.git
+```
+
+Add this lib's `CMakeLists.txt` directory, as well as the headers' ones to your `CMakeLists.txt`, using 
 ```cmake
- add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/cpp_cannonical_wav_decoder")
+# Add and link this projetct to yours 
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/cpp-canonical-wav-decoder")
+target_link_libraries(${PROJECT_NAME} cpp_cannonical_wav_decoder)
+
+# Add the headers to your project so that you can import them.
+target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/cpp-canonical-wav-decoder/include")
  ```
 
 
 ## How to use
-Use the "decode" method using a file path. You then get a struct containing informations about the audio file.
-Do not forget checking for the `is_valid` field. If it is set to false, the library could not read your file and the datas of the struct are UB.
+Use the "decode" method taking a file path as argument. You then get a struct containing informations about the audio file.
+Do not forget checking for the `is_valid` field. If it is set to false, the library could not read your file and the data of the struct is UB.
 
 Example of use : 
 ```c++
@@ -60,5 +72,7 @@ struct audio_data
 ## Other
 
 I will keep track of my research concerning this project on [this document](https://docs.google.com/document/d/1LdD37KP_V9XN9EcEkLolgNTQBt_bSdWRyXJFRHddspM)
+
+[project including this](https://github.com/soundhive/cpp-fingerprint-generator)
 
 [Similar project but for MP3 files](https://github.com/lieff/minimp3)
