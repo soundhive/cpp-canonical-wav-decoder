@@ -8,22 +8,17 @@ std::string gf::bin_to_string(const unsigned char *start,
                               const unsigned char *end,
                               const int &endianness)
 {
+    auto str = std::string(start, end + 1);
+
     if (endianness == BIG_ENDIAN)
     {
-        end++;
-        return std::string(start, end);
+        return str;
     }
     else if (endianness == LITTLE_ENDIAN)
     {
-        std::string res = "";
-        while (start <= end)
-        {
-            res += *end;
-            end--;
-        }
-        return res;
+        std::reverse(str.begin(), str.end());
+        return str;
     }
-    else {
-        throw new std::invalid_argument("Wrong endianess value.");
-    }
+
+    throw new std::invalid_argument("Wrong endianess value.");
 }
