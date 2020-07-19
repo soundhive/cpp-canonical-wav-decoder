@@ -2,8 +2,6 @@
 #include <memory>
 namespace gf = generic_funcs;
 
-
-
 std::string gf::bin_to_string(const unsigned char *start,
                               const unsigned char *end,
                               const int &endianness)
@@ -23,7 +21,8 @@ std::string gf::bin_to_string(const unsigned char *start,
         }
         return res;
     }
-    else {
+    else
+    {
         throw new std::invalid_argument("Wrong endianess value.");
     }
 }

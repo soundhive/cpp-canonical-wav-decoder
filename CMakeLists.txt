@@ -2,9 +2,9 @@
 cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 cmake_policy(VERSION 3.2)
 
-project(cpp_cannonical_wav_decoder
+project(cpp_canonical_wav_decoder
     VERSION "0.0.2"
-    DESCRIPTION "cpp_cannonical_wav_decoder"
+    DESCRIPTION "cpp_cannoical_wav_decoder"
 )
 
 set(CMAKE_CXX_STANDARD 17)
@@ -15,7 +15,7 @@ file(GLOB_RECURSE SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
 add_library(${PROJECT_NAME} ${SOURCES})
 
-set(INCLUDES 
+set(INCLUDES
     "${CMAKE_CURRENT_SOURCE_DIR}/include"
     "${CMAKE_CURRENT_SOURCE_DIR}/src"
 )
@@ -23,8 +23,3 @@ set(INCLUDES
 
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${INCLUDES})
-
-
-
-
-
